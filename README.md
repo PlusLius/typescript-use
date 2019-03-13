@@ -59,3 +59,29 @@ d = 123
 
 
 ```
+
+## 函数
+
+```ts
+/函数定义,可选参数和返回类型,剩余参数
+function hello(name:string,age?:number,...reset:number[]):void{
+    console.log(name)
+}
+hello('plus')
+
+//函数重载,在Java中的重载，指的在TypeScript中，表现为给同一个函数提供多个函数类型定义
+let obj:any = {}
+function a1(val:string):void
+function a1(val:number):void
+function a1(val:any):void{
+    if(typeof val === 'number'){
+        obj.age = val
+    }else {
+        obj.name = val
+    }
+}
+a1('plus')
+a1(1)
+a1(true)
+console.log(obj)
+```
