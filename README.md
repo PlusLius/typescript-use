@@ -235,3 +235,141 @@ function double(val:any):any{
 let r = double(1);
 console.log(r);
 ```
+
+## 接口
+
+```ts
+/*
+接口一方面可以在面向对象编程中表示为行为的抽象，另外可以用来描述对象的形状
+接口就是把一些类中共有的属性和方法抽象出来,可以用来约束实现此接口的类
+一个类可以继承另一个类并实现多个接口
+接口像插件一样是用来增强类的，而抽象类是具体类的抽象概念
+一个类可以实现多个接口，一个接口也可以被多个类实现，但一个类的可以有多个子类，但只能有一个父类
+*/
+interface Speakable{
+    speak():void;
+    name?:string
+}
+
+let speakman:Speakable = {
+    name:'123',
+    speak(){}
+}
+
+//接口可以在面向对象编程中表示为行为的抽象
+interface Speakable{
+    speak():void
+}
+interface Eatable{
+    eat():void
+}
+
+class Person implements Speakable,Eatable {
+    speak(){
+        console.log('Person5说话');
+    }
+    eat(){
+
+    }
+}
+
+class TangDuck implements Speakable{
+    speak(){
+        console.log('TangDuck说话');
+    }
+    eat(){}
+}
+
+//无法预先知道有哪些新的属性的时候,可以使用 `[propName:string]:any`,propName名字是任意的
+interface Person {
+    readonly id: number;
+    name: string;
+    [propName: string]: any;
+  }
+  
+let p1 = {
+    id:1,
+    name:'plus',
+    age:10
+  }
+
+//接口继承
+interface Speakable{
+    speak():void
+}
+interface SpeakChinese extends Speakable{
+    speakChinese():void
+}
+class Person5 implements SpeakChinese{
+    speak(){
+        console.log('Person5')
+    }
+    speakChinese(){
+        console.log('speakChinese')
+    }
+}
+
+//修饰
+interface Tom {
+    readonly id:number;
+    name:string
+}
+let tom:Tom = {
+    id :1,
+    name:'plus'
+}
+//  tom.id = 1;
+
+//对方法传入的参数和返回值进行约束
+interface discount{
+    (price:number):number
+}
+let cost:discount = function(price:number):number{
+    return price * .8;
+}
+
+//可索引接口
+//对数组和对象进行约束
+//userInterface 表示：只要 index 的类型是 number，那么值的类型必须是 string
+//UserInterface2 表示：只要 index 的类型是 string，那么值的类型必须是 string
+interface UserInterface {
+    [index:number]:string
+}
+let arr:UserInterface = ['plus1','plus2'];
+console.log(arr);
+  
+interface UserInterface2 {
+    [index:string]:string
+}
+let obj2:UserInterface2 = {name:'plus'};
+
+//类接口
+interface Speakable2{
+    name:string;
+    speak(words:string):void
+}
+class Dog implements Speakable2{
+     name:string;
+     speak(words){
+      console.log(words);
+     }
+}
+let dog=new Dog();
+dog.speak('汪汪汪');
+
+//在 TypeScript 中，我们可以用 interface 来描述类
+//同时也可以使用interface里特殊的new()关键字来描述类的构造函数类型
+class Animala{
+    constructor(public name:string){
+      
+    }
+}
+interface WithNameClass{
+    new(name:string):Animala
+}
+function createAnimal(clazz:WithNameClass,name:string){
+    return new clazz(name);
+}
+let aaa = createAnimal(Animala,'plus');
+console.log(aaa.name);
+```
