@@ -373,3 +373,97 @@ function createAnimal(clazz:WithNameClass,name:string){
 let aaa = createAnimal(Animala,'plus');
 console.log(aaa.name);
 ```
+
+## 范型
+
+```ts
+//范型
+//泛型（Generics）是指在定义函数、接口或类的时候，不预先指定具体的类型，而在使用的时候再指定类型的一种特性
+//泛型T作用域只限于函数内部使用
+//基本套路：名字<T>
+
+//范型函数
+function createArray(length:number,value:any):Array<any>{
+    let result: any = [];
+    for (let i = 0; i < length; i++) {
+      result[i] = value;
+    }
+    return result;
+}
+let result = createArray(3,'x');
+console.log(result);
+
+function createArray2<T>(length: number, value: T): Array<T> {
+    let result: T[] = [];
+    for (let i = 0; i < length; i++) {
+      result[i] = value;
+    }
+    return result;
+}
+let result2 = createArray2<string>(3,'x');
+console.log(result);
+
+//范型类
+class MyArray<T>{
+    private list:T[]=[];
+    add(value:T) {
+        this.list.push(value);
+    }
+    getMax():T {
+        let result=this.list[0];
+        for (let i=0;i<this.list.length;i++){
+            if (this.list[i]>result) {
+                result=this.list[i];
+            }
+        }
+        return result;
+    }
+}
+let arr=new MyArray();
+arr.add(1); arr.add(2); arr.add(3);
+let ret = arr.getMax();
+console.log(ret);
+
+//范型接口
+interface Calculate{
+    <T>(a:T,b:T):T
+}
+let add:Calculate = function<T>(a:T,b:T){
+    return a;
+}
+add<number>(1,2);
+
+//多个类型参数
+function swap<A,B>(tuple:[A,B]):[B,A]{
+    return [tuple[1],tuple[0]];
+}
+let swapped = swap<string,number>(['a',1]);
+console.log(swapped);
+console.log(swapped[0].toFixed(2));
+console.log(swapped[1].length);
+
+//默认范型
+function createArray3<T=number>(length: number, value: T): Array<T> {
+    let result: T[] = [];
+    for (let i = 0; i < length; i++) {
+      result[i] = value;
+    }
+    return result;
+}
+let result2 = createArray3(3,'x');
+console.log(result2);
+
+//范型接口
+interface Cart<T>{
+    list:T[]
+}
+let cart:Cart<{name:string,price:number}> = {
+    list:[{name:'zhufeng',price:10}]
+}
+console.log(cart.list[0].name,cart.list[0].price);
+
+//范型类型别名
+type Cart<T> = {list:T[]} | T[];
+let c1:Cart<string> = {list:['1']};
+let c2:Cart<number> = [1];
+```
