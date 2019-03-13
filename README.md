@@ -63,7 +63,7 @@ d = 123
 ## 函数
 
 ```ts
-/函数定义,可选参数和返回类型,剩余参数
+//函数定义,可选参数和返回类型,剩余参数
 function hello(name:string,age?:number,...reset:number[]):void{
     console.log(name)
 }
