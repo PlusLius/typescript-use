@@ -485,3 +485,156 @@ type Cart<T> = {list:T[]} | T[];
 let c1:Cart<string> = {list:['1']};
 let c2:Cart<number> = [1];
 ```
+
+## 结构类型系统
+
+```ts
+/结构类型系统
+//如果传入的变量和声明的类型不匹配，TS就会进行兼容性检查
+//原理是Duck-Check,就是说只要目标类型中声明的属性变量在源类型中都存在就是兼容的
+
+interface Animal{
+    name:string;
+    age:number
+    gender:number
+}
+
+let aa = {
+    name:'plus',
+    age:10,
+    gender:0
+}
+
+interface Person{
+    name:string,
+    age:number
+}
+
+function getName(p:Person):string {
+    return p.name
+}
+//只有在传参的时候两个变量之间才会进行兼容性的比较，赋值的时候并不会比较,会直接报错
+let xx:Person = {
+    name:'zhufeng',
+    age:10,
+    gender:0
+}
+
+//基本类型的兼容性
+let num:string | number
+let str:string
+num = str
+
+let num2:{
+    toString():string
+}
+let str2:string
+num2 = str2
+
+//类的兼容性
+class Animal{
+    name:string
+}
+
+class Bird extends Animal{
+    swing:number
+}
+
+let aaa:Animal
+aaa = new Bird()
+//并不是父类兼容子类，子类不兼容父类
+let bbb:Bird
+bbb = new Animal()
+
+class Animal{
+    name:string
+}
+//如果父类和子类结构一样，也可以的
+class Bird extends Animal{}
+
+let aaa:Animal;
+aaa = new Bird();
+
+let bbb:Bird;
+bbb = new Animal();
+
+甚至没有关系的两个类的实例也是可以的
+class Animal{
+    name:string
+}
+class Bird{
+    name:string
+}
+let aaa:Animal ;
+aaa = new Bird();
+let bbb:Bird;
+bbb = new Animal();
+
+//函数的兼容性
+//比较函数的时候是要先比较函数的参数，再比较函数的返回值
+//参数可以省略
+type sumFunc = (a:number,b:number)=>number;
+let sum:sumFunc;
+function f1(a:number,b:number){
+  return a+b;
+}
+sum = f1;
+//可以省略一个参数
+function f2(a:number):number{
+   return a;
+}
+sum = f2;
+//可以省略二个参数
+function f3():number{
+    return 0;
+}
+sum = f3;
+//多一个参数可不行
+function f4(a:number,b:number,c:number){
+    return a+b+c;
+}
+sum = f4;
+
+//函数参数的双向协变
+//函数的参数中目标兼容源，或者源兼容目标都可以，只要有一个成立就可以
+type LogFunc = (a:number|string)=>void;
+let log:LogFunc;
+function log1(a:number){
+  console.log(a);
+}
+//在这里定义的参数类型兼容实际的参数类型
+log = log1;
+
+function log2(a:number|string|boolean){
+  console.log(a);
+}
+//在这里实际的参数类型兼容定义的参数类型
+log = log2;
+
+//范型的兼容性
+//泛型在判断兼容性的时候会先判断具体的类型,然后再进行兼容性判断
+//接口内容为空没用到泛型的时候是可以的
+interface Empty<T> {
+}
+let x1: Empty<number>;
+let y1: Empty<string>;
+
+x1 = y1; 
+
+
+//枚举的兼容性
+//枚举类型与数字类型兼容，并且数字类型与枚举类型兼容
+//不同枚举类型之间是不兼容的
+enum Colors {Red,Yellow}
+let ccc:Colors;
+ccc = Colors.Red;
+ccc = 1;
+ccc = '1';
+
+//枚举值可以赋给数字
+let n:number;
+n = 1;
+n = Colors.Red;
+
+
+```
