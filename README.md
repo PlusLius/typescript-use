@@ -637,3 +637,120 @@ n = Colors.Red;
 
 
 ```
+
+## 交叉类型
+
+```ts
+//交叉类型（Intersection Types）表示将多个类型合并为一个类型
+interface Bird1{
+    name:string,
+    fly():void
+}
+interface Person1{
+     name:string,
+     talk():void
+}
+type BirdPerson = Bird1 & Person1;
+let ppp:BirdPerson={name:'plus',fly(){},talk(){}};
+
+ppp.fly;
+ppp.name
+ppp.talk;
+
+//索引访问操作符
+//keyof
+interface Person{
+    name:string;
+    age:number;
+    gender:'male'|'female';
+}
+//type PersonKey = 'name'|'age'|'gender';
+type PersonKey = keyof Person;
+
+function getValueByKey(p:Person,key:PersonKey){
+    return p[key];
+}
+let val = getValueByKey({name:'zhufeng',age:10,gender:'male'},'name');
+console.log(val);
+
+//映射类型
+//在定义的时候用in操作符去批量定义类型中的属性
+interface Person{
+    name:string;
+    age:number;
+    gender:'male'|'female';
+}
+//批量把一个接口中的属性都变成可选的
+type PartPerson = {
+    [Key in keyof Person]?:Person[Key]
+}
+
+let p1:PartPerson={};
+//也可以使用泛型
+type Part<T> = {
+    [key in keyof T]?:T[key]
+}
+let p2:Part<Person>={};
+
+//内置工具类型
+//Partial 可以将传入的属性由非可选变为可选，具体使用如下：
+type Partial<T> = { [P in keyof T]?: T[P] };
+
+interface A {
+  a1: string;
+  a2: number;
+  a3: boolean;
+}
+
+type aPartial = Partial<A>;
+
+const abcd: aPartial = {}; // 不会报错
+
+//Required 可以将传入的属性中的可选项变为必选项，这里用了 -? 修饰符来实现。
+type Required<T> = { [P in keyof T]-?: T[P] };
+
+interface Person{
+  name:string;
+  age:number;
+  gender?:'male'|'female';
+}
+let p:Required<Person> = {
+  name:'plus',
+  age:10,
+ // gender:'male'
+}
+
+//Readonlyy 通过为传入的属性每一项都加上 readonly 修饰符来实现
+type Readonly<T> = { readonly [P in keyof T]: T[P] };
+
+interface Person{
+  name:string;
+  age:number;
+  gender?:'male'|'female';
+}
+let p:Readonly<Person> = {
+  name:'plus',
+  age:10,
+  gender:'male'
+}
+p.age = 11;
+
+//pick 能够帮助我们从传入的属性中摘取某一项返回
+type Pick<T, K extends keyof T> = { [P in K]: T[P] };
+
+interface Animal {
+  name: string;
+  age: number;
+}
+// 摘取 Animal 中的 name 属性
+type AnimalSub = Pick<Animal, "name">; // { name: string; }
+
+
+//内置条件类型
+
+Exclude<T, U> // 从 T 可分配给的类型中排除 U。
+Extract<T, U> // 从 T 可分配的类型中提取 U。
+NonNullable<T> // 从 T 中排除 null 和 undefined。
+ReturnType<T> // 获取函数类型的返回类型。
+InstanceType<T> // 获取构造函数类型的实例类型。
+```
